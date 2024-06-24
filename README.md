@@ -54,3 +54,5 @@ pnpm dev
      - setCardNumber
      - setEmailOfCard
      - setPhoneOfCard
+
+![alt text](image.png)
