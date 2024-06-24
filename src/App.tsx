@@ -1,3 +1,4 @@
+import { useShallow } from "zustand/react/shallow";
 import { useCountStoreV1 } from "./stores/v1/storev1";
 import { userStoreV2 } from "./stores/v2/storev2";
 import { userStoreV3 } from "./stores/v3/storev3";
@@ -5,7 +6,16 @@ import { BlueButton, RedButton } from "./ui/Button";
 import { Input } from "./ui/Input";
 
 const BasicExample = () => {
-  const { count, increment, decrement } = useCountStoreV1();
+  const { count, increment, decrement } = useCountStoreV1(
+    // useShallow is used to prevent unnecessary re-renders
+    useShallow((state) => {
+      return {
+        count: state.count,
+        increment: state.increment,
+        decrement: state.decrement,
+      };
+    })
+  );
   return (
     <div className="text-center w-full">
       <p className="text-2xl font-semibold text-blue-500 ">
@@ -77,20 +87,7 @@ const BasicExampleWithSlice = () => {
 };
 
 const BasicExampleWithSliceAndImmer = () => {
-  const {
-    fullName,
-    email,
-    age,
-    address,
-    setCity,
-    setCountryCode,
-    setCountryName,
-    cardNumber,
-    contact,
-    setCardNumber,
-    setEmailOfCard,
-    setPhoneOfCard,
-  } = userStoreV3();
+  const store = userStoreV3();
   return (
     <div className="w-full">
       <p className="text-2xl font-semibold text-blue-500 text-center">
@@ -99,39 +96,39 @@ const BasicExampleWithSliceAndImmer = () => {
       <div className="flex w-full bg-slate-50 text-center p-5 gap-x-4 items-start">
         <div className="w-1/2 text-left">
           <p className="text-xl font-bold"> User info</p>
-          <p>user full name: {fullName}</p>
-          <p>user email: {email}</p>
-          <p>user age: {age}</p>
+          <p>user full name: {store.fullName}</p>
+          <p>user email: {store.email}</p>
+          <p>user age: {store.age}</p>
           <p className="underline underline-offset-1">user address:</p>
-          <p className="pl-4">City: {address.city}</p>
+          <p className="pl-4">City: {store.address.city}</p>
           <p className="pl-4">
-            Country: {address.country.name} - {address.country.code}
+            Country: {store.address.country.name} - {store.address.country.code}
           </p>
           <br />
           <Input
             placeholder="City Name"
-            value={address.city}
+            value={store.address.city}
             customCalss="w-full"
             onChange={(value) => {
-              setCity(value.target.value);
+              store.setCity(value.target.value);
             }}
           />
           <br />
           <div className="flex gap-1">
             <Input
               placeholder="Country Name"
-              value={address.country.name}
+              value={store.address.country.name}
               customCalss="w-1/2"
               onChange={(value) => {
-                setCountryName(value.target.value);
+                store.setCountryName(value.target.value);
               }}
             />
             <Input
               placeholder="Country Code"
-              value={address.country.code}
+              value={store.address.country.code}
               customCalss="w-1/2"
               onChange={(value) => {
-                setCountryCode(value.target.value);
+                store.setCountryCode(value.target.value);
               }}
             />
           </div>
@@ -146,38 +143,38 @@ const BasicExampleWithSliceAndImmer = () => {
         </div>
         <div className="w-1/2 text-left">
           <p className="text-xl font-bold">Card info</p>
-          <p>card number: {cardNumber}</p>
+          <p>card number: {store.cardNumber}</p>
           <p className="underline underline-offset-1">Contatct</p>
-          <p className="pl-4">Email: {contact.email}</p>
-          <p className="pl-4">Phone: {contact.phone}</p>
+          <p className="pl-4">Email: {store.contact.email}</p>
+          <p className="pl-4">Phone: {store.contact.phone}</p>
           <br />
           <br />
           <br />
 
           <Input
             placeholder="Card Number"
-            value={cardNumber}
+            value={store.cardNumber}
             customCalss="w-full"
             onChange={(value) => {
-              setCardNumber(value.target.value);
+              store.setCardNumber(value.target.value);
             }}
           />
           <br />
           <div className="flex gap-1">
             <Input
               placeholder="Email"
-              value={contact.email}
+              value={store.contact.email}
               customCalss="w-full"
               onChange={(value) => {
-                setEmailOfCard(value.target.value);
+                store.setEmailOfCard(value.target.value);
               }}
             />
             <Input
               placeholder="Card Number"
-              value={contact.phone}
+              value={store.contact.phone}
               customCalss="w-full"
               onChange={(value) => {
-                setPhoneOfCard(value.target.value);
+                store.setPhoneOfCard(value.target.value);
               }}
             />
           </div>
